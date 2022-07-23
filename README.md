@@ -1,3 +1,6 @@
+# Notice
+This is my fork of cf-warp, with fixes to make it work again.
+
 # cf-warp
 
 > A simple cli to get [Warp+](https://blog.cloudflare.com/announcing-warp-plus/) as [WireGuard](https://www.wireguard.com/) configuration
