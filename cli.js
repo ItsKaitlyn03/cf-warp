@@ -8,7 +8,6 @@ const register = require('./lib/register')
 const info = require('./lib/info')
 const ref = require('./lib/ref')
 const conf = require('./lib/conf')
-const license = require('./lib/license')
 
 const args = process.argv.slice(2)
 const HOME = os.homedir()
@@ -75,35 +74,17 @@ async function init() {
 		await write('cf-warp.conf', conf(data))
 	}
 
-	if (args[0] === '--license') {
-		// License
-		const licenseStr = args[1]
-		if (!licenseStr) {
-			console.log('Please provide a valid license string from your app.')
-			console.log('Example: cf-warp --license 1a2b3d4e-1a2b3d4e-1a2b3d4e')
-			return
+	const n = parseInt(args[0])
+	if (!isNaN(n)) {
+		console.log(`Prepare faking Warp+ referrer for ${n} times.`)
+		for (let i = 1; i <= n; i++) {
+			await sleep(20000)
+			await ref(data)
+			console.log(`#${i} fake referrer finished`)
 		}
-		console.log(
-			`Trying to register your device under the license "${licenseStr}"`
-		)
-		await license({ ...data, license: licenseStr })
-		console.log(
-			'Done. You may now manage your device on other devices under the same license.'
-		)
 		console.log()
-	} else {
-		// referrer
-		const n = parseInt(args[0])
-		if (!isNaN(n)) {
-			console.log(`Prepare faking Warp+ referrer for ${n} times.`)
-			for (let i = 1; i <= n; i++) {
-				await sleep(20000)
-				await ref(data)
-				console.log(`#${i} fake referrer finished`)
-			}
-			console.log()
-		}
 	}
+	await sleep(2000)
 	const newData = await info(data)
 	printInfo(newData)
 	await write(
